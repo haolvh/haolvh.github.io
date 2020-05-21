@@ -1,6 +1,217 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Git学习</title>
+    <url>/2020/05/21/Git%E5%AD%A6%E4%B9%A0/</url>
+    <content><![CDATA[<h1 id="Git版本控制方式"><a href="#Git版本控制方式" class="headerlink" title="Git版本控制方式"></a>Git版本控制方式</h1><ul>
+<li><img src="https://raw.githubusercontent.com/haolvh/PicGo/master/image/20200521124819.png" alt="20200521124819"></li>
+<li>将工作目录的代码先提交到暂存区，然后再由暂存区提交到本地仓库</li>
+</ul>
+<h1 id="Git命令行操作"><a href="#Git命令行操作" class="headerlink" title="Git命令行操作"></a>Git命令行操作</h1><h2 id="本地库操作"><a href="#本地库操作" class="headerlink" title="本地库操作"></a>本地库操作</h2><h3 id="本地库初始化"><a href="#本地库初始化" class="headerlink" title="本地库初始化"></a>本地库初始化</h3><ul>
+<li><p>进入到需要建立本地仓库的文件夹，执行<code>git init</code>命令，初始化后会生成隐藏文件夹.git</p>
+<ul>
+<li>注意：.git文件中存放的是本地库相关的子目录和文件，不要删除，也不要胡乱修改。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="基本操作"><a href="#基本操作" class="headerlink" title="基本操作"></a>基本操作</h3><h4 id="基础操作"><a href="#基础操作" class="headerlink" title="基础操作"></a>基础操作</h4><ul>
+<li><p>状态查看操作</p>
+<ul>
+<li><code>git status</code></li>
+<li>查看工作区、暂存区状态</li>
+</ul>
+</li>
+<li><p>添加操作</p>
+<ul>
+<li><code>git add [file name]</code></li>
+<li>将工作区的“新建/修改”添加到暂存区</li>
+</ul>
+</li>
+<li><p>提交操作</p>
+<ul>
+<li><code>git commit -m &quot;commit message&quot; [file name]</code></li>
+<li>将暂存区的内容提交到本地库</li>
+</ul>
+</li>
+<li><p><img src="https://raw.githubusercontent.com/haolvh/PicGo/master/image/20200521161438.png" alt="20200521161438"></p>
+</li>
+<li><p>查看历史记录</p>
+<ul>
+<li><p><code>git log</code></p>
+</li>
+<li><p><img src="https://raw.githubusercontent.com/haolvh/PicGo/master/image/20200521162217.png" alt="20200521162217"></p>
+</li>
+<li><p>多屏显示控制方式：</p>
+<ul>
+<li>空格向下翻页</li>
+<li>b 向上翻页</li>
+<li>q 退出</li>
+</ul>
+</li>
+<li><p><code>git log --pretty=oneline</code></p>
+</li>
+<li><p><img src="https://raw.githubusercontent.com/haolvh/PicGo/master/image/20200521162537.png" alt="20200521162537"></p>
+</li>
+<li><p><code>git log --oneline</code></p>
+</li>
+<li><p><img src="https://raw.githubusercontent.com/haolvh/PicGo/master/image/20200521162712.png" alt="20200521162712"></p>
+</li>
+<li><p><code>git reflog</code></p>
+</li>
+<li><p><img src="https://raw.githubusercontent.com/haolvh/PicGo/master/image/20200521162815.png" alt="20200521162815"></p>
+<ul>
+<li>HEAD@{移动到当前版本需要多少步}</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h4 id="版本前进回退操作"><a href="#版本前进回退操作" class="headerlink" title="版本前进回退操作"></a>版本前进回退操作</h4><ul>
+<li><p><img src="https://raw.githubusercontent.com/haolvh/PicGo/master/image/20200521164232.png" alt="20200521164232"></p>
+</li>
+<li><p><strong>基于索引值操作（最常用、推荐）</strong></p>
+<ul>
+<li><code>git reset --hard [局部索引值]</code></li>
+<li><code>git reset --hard f932af0</code></li>
+</ul>
+</li>
+<li><p>使用<code>^</code>符号：只能后退</p>
+<ul>
+<li><code>git reset --hard HEAD^</code></li>
+<li>注意：一个<code>^</code>表示后退一步，n个表示后退n步</li>
+</ul>
+</li>
+<li><p>使用<code>~</code>符号：只能后退</p>
+<ul>
+<li><code>git reset --hard HEAD~n</code></li>
+<li>注意：表示后退n步</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h4 id="reset命令的三个参数对比"><a href="#reset命令的三个参数对比" class="headerlink" title="reset命令的三个参数对比"></a>reset命令的三个参数对比</h4><ul>
+<li><p><code>--soft</code>参数</p>
+<ul>
+<li>仅仅在本地库移动HEDA指针</li>
+<li><img src="https://raw.githubusercontent.com/haolvh/PicGo/master/image/20200521170218.png" alt="20200521170218"></li>
+</ul>
+</li>
+<li><p><code>--mixed</code>参数</p>
+<ul>
+<li>在本地库移动HEAD指针</li>
+<li>重置暂存区</li>
+<li><img src="https://raw.githubusercontent.com/haolvh/PicGo/master/image/20200521170444.png" alt="20200521170444"></li>
+</ul>
+</li>
+<li><p><code>--hard</code>参数</p>
+<ul>
+<li>在本地库移动HEDA指针</li>
+<li>重置暂存区</li>
+<li>重置工作区</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h4 id="删除文件并找回"><a href="#删除文件并找回" class="headerlink" title="删除文件并找回"></a>删除文件并找回</h4><ul>
+<li>前提：删除前，文件存在时的状态提交到了本地库</li>
+<li>操作：<code>git reset --hard [版本索引]</code></li>
+</ul>
+<hr>
+<h4 id="比较文件差异"><a href="#比较文件差异" class="headerlink" title="比较文件差异"></a>比较文件差异</h4><ul>
+<li><p><code>git diff [file name]</code></p>
+<ul>
+<li>将工作区中的文件和暂存区进行比较</li>
+</ul>
+</li>
+<li><p><code>git diff [版本索引] [file name]</code></p>
+<ul>
+<li>将工作区中的文件和本地库历史记录进行比较</li>
+</ul>
+</li>
+<li><p><code>git diff</code>  即不带文件名</p>
+<ul>
+<li>比较多个文件</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="分支管理"><a href="#分支管理" class="headerlink" title="分支管理"></a>分支管理</h3><h4 id="什么是分支"><a href="#什么是分支" class="headerlink" title="什么是分支"></a>什么是分支</h4><p>在版本控制中，使用多条线同时推进多个任务</p>
+<ul>
+<li><img src="https://raw.githubusercontent.com/haolvh/PicGo/master/image/20200521173339.png" alt="20200521173339"></li>
+</ul>
+<h4 id="分支的好处"><a href="#分支的好处" class="headerlink" title="分支的好处"></a>分支的好处</h4><ul>
+<li>同时并行推进多个功能开发，提高开发效率</li>
+<li>各个分支在开发过程中，如果某一个分支开发失败，不会对其他分支由任何影响。失败的分支删除重新开始即可</li>
+</ul>
+<hr>
+<h4 id="分支操作"><a href="#分支操作" class="headerlink" title="分支操作"></a>分支操作</h4><ul>
+<li><p>创建分支</p>
+<ul>
+<li><code>git branch [分支名]</code></li>
+</ul>
+</li>
+<li><p>查看分支</p>
+<ul>
+<li><code>git branch -v</code></li>
+</ul>
+</li>
+<li><p>切换分支</p>
+<ul>
+<li><code>git checkout [分支名]</code></li>
+</ul>
+</li>
+<li><p>合并分支</p>
+<ul>
+<li><p>切换到接受修改的分支（被合并，增加新内容）上</p>
+<ul>
+<li><code>git checkout [被合并分支名]</code></li>
+</ul>
+</li>
+<li><p>执行<code>merge</code>命令</p>
+<ul>
+<li><code>git merge [有新内容分支名]</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>解决冲突</p>
+<ul>
+<li><p>分支的表现</p>
+<ul>
+<li><img src="https://raw.githubusercontent.com/haolvh/PicGo/master/image/20200521174938.png" alt="20200521174938"></li>
+</ul>
+</li>
+<li><p>冲突的解决</p>
+<ul>
+<li><p>编辑文件，删除特殊符号</p>
+</li>
+<li><p>把文件修改到满意的程度，保存退出</p>
+</li>
+<li><p><code>git add [文件名]</code></p>
+</li>
+<li><p><code>git commit -m &quot;日志信息&quot;</code></p>
+<ul>
+<li>注意：此时commit一定不能带具体文件名</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+]]></content>
+      <categories>
+        <category>Git</category>
+      </categories>
+      <tags>
+        <tag>Git</tag>
+        <tag>Github</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Hello World</title>
     <url>/2020/05/18/hello-world/</url>
     <content><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
