@@ -1,69 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>VScode搭建GitHub稳定图床</title>
-    <url>/2020/05/25/VScode%E6%90%AD%E5%BB%BAGitHub%E7%A8%B3%E5%AE%9A%E5%9B%BE%E5%BA%8A/</url>
-    <content><![CDATA[<h1 id="VScode安装插件PicGo"><a href="#VScode安装插件PicGo" class="headerlink" title="VScode安装插件PicGo"></a>VScode安装插件PicGo</h1><p>需要用到PicGo这个插件，直接在VScode应用商店中搜索PicGo安装即可</p>
-<hr>
-<h1 id="PicGo的GitHub配置"><a href="#PicGo的GitHub配置" class="headerlink" title="PicGo的GitHub配置"></a>PicGo的GitHub配置</h1><h2 id="VScode中PicGo配置"><a href="#VScode中PicGo配置" class="headerlink" title="VScode中PicGo配置"></a>VScode中PicGo配置</h2><ul>
-<li><p>打开文件-&gt;首选项-&gt;设置-&gt;扩展-&gt;PicGo，找到找到extensions中的Picgo的设置</p>
-<ul>
-<li><img src="https://raw.githubusercontent.com/haolvh/PicGo/master/image/20200525121434.png" alt="20200525121434"></li>
-</ul>
-</li>
-<li><p>往下找到GitHub，进行配置</p>
-<ul>
-<li><p><img src="https://raw.githubusercontent.com/haolvh/PicGo/master/image/20200525121705.png" alt="20200525121705"></p>
-</li>
-<li><p>首先是PicGO-Core设为<code>github</code></p>
-</li>
-<li><p>Branch自己用Git命令查看分支，一般设为<code>master</code></p>
-</li>
-<li><p>Path要和Repo搭配使用，到时候上传的图片就会到Repo+Path目录下</p>
-</li>
-<li><p>最后一步token配置</p>
-<ul>
-<li>在GitHub上生成token</li>
-<li>首先从头像那打开设置</li>
-<li><img src="https://raw.githubusercontent.com/haolvh/PicGo/master/image/20200525122457.png" alt="20200525122457"></li>
-<li>找到最下面的Developer Settings:</li>
-<li><img src="https://raw.githubusercontent.com/haolvh/PicGo/master/image/20200525122612.png" alt="20200525122612"></li>
-<li>从Personal Access里生成一个token，可以备份下次使用</li>
-<li><img src="https://raw.githubusercontent.com/haolvh/PicGo/master/image/20200525122654.png" alt="20200525122654"></li>
-<li>最后把token复制到PicGo设置里的Github Token里就可以在vscode里使用图床了</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<hr>
-<h1 id="图床命令"><a href="#图床命令" class="headerlink" title="图床命令"></a>图床命令</h1><p>三个基本命令：</p>
-<ul>
-<li><p>从文件目录手动插入图片</p>
-<ul>
-<li><code>ctrl+alt+e</code></li>
-</ul>
-</li>
-<li><p>从剪贴板插入图片</p>
-<ul>
-<li><code>ctrl+alt+u</code></li>
-</ul>
-</li>
-<li><p>从输入目录插入图片，相对目录和绝对目录都行</p>
-<ul>
-<li><code>ctrl+alt+o</code></li>
-</ul>
-</li>
-</ul>
-]]></content>
-      <categories>
-        <category>IDE插件</category>
-      </categories>
-      <tags>
-        <tag>vscode</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Git学习</title>
     <url>/2020/05/21/Git%E5%AD%A6%E4%B9%A0/</url>
     <content><![CDATA[<h1 id="Git版本控制方式"><a href="#Git版本控制方式" class="headerlink" title="Git版本控制方式"></a>Git版本控制方式</h1><ul>
@@ -272,6 +209,76 @@
       <tags>
         <tag>Git</tag>
         <tag>Github</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>VScode搭建GitHub稳定图床</title>
+    <url>/2020/05/25/VScode%E6%90%AD%E5%BB%BAGitHub%E7%A8%B3%E5%AE%9A%E5%9B%BE%E5%BA%8A/</url>
+    <content><![CDATA[<h1 id="VScode安装插件PicGo"><a href="#VScode安装插件PicGo" class="headerlink" title="VScode安装插件PicGo"></a>VScode安装插件PicGo</h1><p>需要用到PicGo这个插件，直接在VScode应用商店中搜索PicGo安装即可</p>
+<hr>
+<h1 id="PicGo的GitHub配置"><a href="#PicGo的GitHub配置" class="headerlink" title="PicGo的GitHub配置"></a>PicGo的GitHub配置</h1><h2 id="VScode中PicGo配置"><a href="#VScode中PicGo配置" class="headerlink" title="VScode中PicGo配置"></a>VScode中PicGo配置</h2><ul>
+<li><p>打开文件-&gt;首选项-&gt;设置-&gt;扩展-&gt;PicGo，找到找到extensions中的Picgo的设置</p>
+<ul>
+<li><img src="https://raw.githubusercontent.com/haolvh/PicGo/master/image/20200525121434.png" alt="20200525121434"></li>
+</ul>
+</li>
+<li><p>往下找到GitHub，进行配置</p>
+<ul>
+<li><p><img src="https://raw.githubusercontent.com/haolvh/PicGo/master/image/20200525121705.png" alt="20200525121705"></p>
+</li>
+<li><p>首先是PicGO-Core设为<code>github</code></p>
+</li>
+<li><p>Branch自己用Git命令查看分支，一般设为<code>master</code></p>
+</li>
+<li><p>Path要和Repo搭配使用，到时候上传的图片就会到Repo+Path目录下</p>
+</li>
+<li><p>最后一步token配置</p>
+<ul>
+<li>在GitHub上生成token</li>
+<li>首先从头像那打开设置</li>
+<li><img src="https://raw.githubusercontent.com/haolvh/PicGo/master/image/20200525122457.png" alt="20200525122457"></li>
+<li>找到最下面的Developer Settings:</li>
+<li><img src="https://raw.githubusercontent.com/haolvh/PicGo/master/image/20200525122612.png" alt="20200525122612"></li>
+<li>从Personal Access里生成一个token，可以备份下次使用</li>
+<li><img src="https://raw.githubusercontent.com/haolvh/PicGo/master/image/20200525122654.png" alt="20200525122654"></li>
+<li>最后把token复制到PicGo设置里的Github Token里就可以在vscode里使用图床了</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="图床命令"><a href="#图床命令" class="headerlink" title="图床命令"></a>图床命令</h1><p>三个基本命令：</p>
+<ul>
+<li><p>从文件目录手动插入图片</p>
+<ul>
+<li><code>ctrl+alt+e</code></li>
+</ul>
+</li>
+<li><p>从剪贴板插入图片</p>
+<ul>
+<li><code>ctrl+alt+u</code></li>
+</ul>
+</li>
+<li><p>从输入目录插入图片，相对目录和绝对目录都行</p>
+<ul>
+<li><code>ctrl+alt+o</code></li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="访问配置"><a href="#访问配置" class="headerlink" title="访问配置"></a>访问配置</h1><p>图片的访问网址默认为<a href="https://raw.githubusercontent.com/xxx/xxxx/xxxxx" target="_blank" rel="noopener">https://raw.githubusercontent.com/xxx/xxxx/xxxxx</a></p>
+<p>如果访问失败，需要修改host文件</p>
+<ul>
+<li>添加<code>199.232.68.133 raw.githubusercontent.com</code></li>
+<li><img src="https://raw.githubusercontent.com/haolvh/PicGo/master/image/20200525123734.png" alt="20200525123734"></li>
+</ul>
+]]></content>
+      <categories>
+        <category>IDE插件</category>
+      </categories>
+      <tags>
+        <tag>vscode</tag>
       </tags>
   </entry>
   <entry>
