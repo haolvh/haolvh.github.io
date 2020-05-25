@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://haolvh.github.io/"/>
-  <updated>2020-05-21T10:04:42.900Z</updated>
+  <updated>2020-05-25T04:30:15.119Z</updated>
   <id>http://haolvh.github.io/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>VScode搭建GitHub稳定图床</title>
+    <link href="http://haolvh.github.io/2020/05/25/VScode%E6%90%AD%E5%BB%BAGitHub%E7%A8%B3%E5%AE%9A%E5%9B%BE%E5%BA%8A/"/>
+    <id>http://haolvh.github.io/2020/05/25/VScode%E6%90%AD%E5%BB%BAGitHub%E7%A8%B3%E5%AE%9A%E5%9B%BE%E5%BA%8A/</id>
+    <published>2020-05-25T04:00:57.000Z</published>
+    <updated>2020-05-25T04:30:15.119Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="VScode安装插件PicGo"><a href="#VScode安装插件PicGo" class="headerlink" title="VScode安装插件PicGo"></a>VScode安装插件PicGo</h1><p>需要用到PicGo这个插件，直接在VScode应用商店中搜索PicGo安装即可</p><hr><h1 id="PicGo的GitHub配置"><a href="#PicGo的GitHub配置" class="headerlink" title="PicGo的GitHub配置"></a>PicGo的GitHub配置</h1><h2 id="VScode中PicGo配置"><a href="#VScode中PicGo配置" class="headerlink" title="VScode中PicGo配置"></a>VScode中PicGo配置</h2><ul><li><p>打开文件-&gt;首选项-&gt;设置-&gt;扩展-&gt;PicGo，找到找到extensions中的Picgo的设置</p><ul><li><img src="https://raw.githubusercontent.com/haolvh/PicGo/master/image/20200525121434.png" alt="20200525121434"></li></ul></li><li><p>往下找到GitHub，进行配置</p><ul><li><p><img src="https://raw.githubusercontent.com/haolvh/PicGo/master/image/20200525121705.png" alt="20200525121705"></p></li><li><p>首先是PicGO-Core设为<code>github</code></p></li><li><p>Branch自己用Git命令查看分支，一般设为<code>master</code></p></li><li><p>Path要和Repo搭配使用，到时候上传的图片就会到Repo+Path目录下</p></li><li><p>最后一步token配置</p><ul><li>在GitHub上生成token</li><li>首先从头像那打开设置</li><li><img src="https://raw.githubusercontent.com/haolvh/PicGo/master/image/20200525122457.png" alt="20200525122457"></li><li>找到最下面的Developer Settings:</li><li><img src="https://raw.githubusercontent.com/haolvh/PicGo/master/image/20200525122612.png" alt="20200525122612"></li><li>从Personal Access里生成一个token，可以备份下次使用</li><li><img src="https://raw.githubusercontent.com/haolvh/PicGo/master/image/20200525122654.png" alt="20200525122654"></li><li>最后把token复制到PicGo设置里的Github Token里就可以在vscode里使用图床了</li></ul></li></ul></li></ul><hr><h1 id="图床命令"><a href="#图床命令" class="headerlink" title="图床命令"></a>图床命令</h1><p>三个基本命令：</p><ul><li><p>从文件目录手动插入图片</p><ul><li><code>ctrl+alt+e</code></li></ul></li><li><p>从剪贴板插入图片</p><ul><li><code>ctrl+alt+u</code></li></ul></li><li><p>从输入目录插入图片，相对目录和绝对目录都行</p><ul><li><code>ctrl+alt+o</code></li></ul></li></ul>]]></content>
+    
+    <summary type="html">
+    
+      GitHub+VScode(PicGo)搭建个人博客图床
+    
+    </summary>
+    
+    
+      <category term="IDE插件" scheme="http://haolvh.github.io/categories/IDE%E6%8F%92%E4%BB%B6/"/>
+    
+    
+      <category term="vscode" scheme="http://haolvh.github.io/tags/vscode/"/>
+    
+  </entry>
   
   <entry>
     <title>Git学习</title>
