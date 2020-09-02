@@ -1,73 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>VScode搭建GitHub稳定图床</title>
-    <url>/2020/05/25/VScode%E6%90%AD%E5%BB%BAGitHub%E7%A8%B3%E5%AE%9A%E5%9B%BE%E5%BA%8A/</url>
-    <content><![CDATA[<h1 id="VScode安装插件PicGo"><a href="#VScode安装插件PicGo" class="headerlink" title="VScode安装插件PicGo"></a>VScode安装插件PicGo</h1><p>需要用到PicGo这个插件，直接在VScode应用商店中搜索PicGo安装即可</p>
+    <title>SpringBoot项目打成jar包读取resource下文件</title>
+    <url>/2020/09/02/SpringBoot%E9%A1%B9%E7%9B%AE%E6%89%93%E6%88%90jar%E5%8C%85%E8%AF%BB%E5%8F%96resource%E4%B8%8B%E6%96%87%E4%BB%B6/</url>
+    <content><![CDATA[<h1 id="普通模式下resource下文件的读取"><a href="#普通模式下resource下文件的读取" class="headerlink" title="普通模式下resource下文件的读取"></a>普通模式下resource下文件的读取</h1><ul>
+<li>采用<code>@Value</code>注解读取</li>
+<li><code>File file = ResourceUtils.getFile(&quot;classpath:exceltmp/template_export.xls&quot;);</code></li>
+</ul>
 <hr>
-<h1 id="PicGo的GitHub配置"><a href="#PicGo的GitHub配置" class="headerlink" title="PicGo的GitHub配置"></a>PicGo的GitHub配置</h1><h2 id="VScode中PicGo配置"><a href="#VScode中PicGo配置" class="headerlink" title="VScode中PicGo配置"></a>VScode中PicGo配置</h2><ul>
-<li><p>打开文件-&gt;首选项-&gt;设置-&gt;扩展-&gt;PicGo，找到找到extensions中的Picgo的设置</p>
-<ul>
-<li><img src="https://raw.githubusercontent.com/haolvh/PicGo/master/image/20200525121434.png" alt="20200525121434"></li>
+<h1 id="SpringBoot项目使用mvn-package打成jar包resource下文件读取"><a href="#SpringBoot项目使用mvn-package打成jar包resource下文件读取" class="headerlink" title="SpringBoot项目使用mvn package打成jar包resource下文件读取"></a>SpringBoot项目使用mvn package打成jar包resource下文件读取</h1><ul>
+<li>按照普通模式下resource文件的读取方式，jar会报错：<ul>
+<li><code>java.io.FileNotFoundException: class path resource [exceltmp/template_export.xls] cannot be resolved to absolute file path because it does not reside in the file system:jar:file:/Users/apple/project-code/xdod-project/xdod-backend/target/xdod-backend.jar!/BOOT-INF/classes!/exceltmp/template_export.xls</code></li>
 </ul>
 </li>
-<li><p>往下找到GitHub，进行配置</p>
-<ul>
-<li><p><img src="https://raw.githubusercontent.com/haolvh/PicGo/master/image/20200525121705.png" alt="20200525121705"></p>
-</li>
-<li><p>首先是PicGO-Core设为<code>github</code></p>
-</li>
-<li><p>Branch自己用Git命令查看分支，一般设为<code>master</code></p>
-</li>
-<li><p>Path要和Repo搭配使用，到时候上传的图片就会到Repo+Path目录下</p>
-</li>
-<li><p>最后一步token配置</p>
-<ul>
-<li>在GitHub上生成token</li>
-<li>首先从头像那打开设置</li>
-<li><img src="https://raw.githubusercontent.com/haolvh/PicGo/master/image/20200525122457.png" alt="20200525122457"></li>
-<li>找到最下面的Developer Settings:</li>
-<li><img src="https://raw.githubusercontent.com/haolvh/PicGo/master/image/20200525122612.png" alt="20200525122612"></li>
-<li>从Personal Access里生成一个token，可以备份下次使用</li>
-<li><img src="https://raw.githubusercontent.com/haolvh/PicGo/master/image/20200525122654.png" alt="20200525122654"></li>
-<li>最后把token复制到PicGo设置里的Github Token里就可以在vscode里使用图床了</li>
-</ul>
-</li>
+<li>报错原因：<ul>
+<li>Resource下的文件是存在于jar这个文件里面，在磁盘上是没有真实路径存在的，它其实是位于jar内部的一个路径。所以通过ResourceUtils.getFile或者this.getClass().getResource(“”)方法无法正确获取文件</li>
 </ul>
 </li>
 </ul>
 <hr>
-<h1 id="图床命令"><a href="#图床命令" class="headerlink" title="图床命令"></a>图床命令</h1><p>三个基本命令：</p>
+<h1 id="jar包正确的resource下文件读取方式"><a href="#jar包正确的resource下文件读取方式" class="headerlink" title="jar包正确的resource下文件读取方式"></a>jar包正确的resource下文件读取方式</h1><h2 id="文本文件读取"><a href="#文本文件读取" class="headerlink" title="文本文件读取"></a>文本文件读取</h2><ul>
+<li><p>采用流的方式来读取文件，对文件流进行相关的操作</p>
+</li>
+<li><p>SpringBoot使用<code>ClassPathResource</code>来读取文件流，将文件读取成字符串在进行二次操作</p>
+</li>
+<li><p>适用于：</p>
 <ul>
-<li><p>从文件目录手动插入图片</p>
-<ul>
-<li><code>ctrl+alt+e</code></li>
+<li>配置文件：<code>properties</code></li>
+<li>文本文件: <code>txt</code></li>
+<li>其他文件：<code>csv</code>,<code>SOL</code>,<code>json</code>等</li>
 </ul>
 </li>
-<li><p>从剪贴板插入图片</p>
+<li><p>```java<br>String data = “”;<br>ClassPathResource cpr = new ClassPathResource(“static/file.txt”);<br>try {</p>
+<pre><code>byte[] bdata = FileCopyUtils.copyToByteArray(cpr.getInputStream());
+data = new String(bdata, StandardCharsets.UTF_8);</code></pre><p>  } catch (IOException e) {</p>
+<pre><code>LOG.warn(&quot;IOException&quot;, e);</code></pre><p>}</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">- 工具类：</span><br><span class="line">  - &#96;&#96;&#96;java</span><br><span class="line">      import java.io.BufferedReader;</span><br><span class="line">      import java.io.IOException;</span><br><span class="line">      import java.io.InputStreamReader;</span><br><span class="line">      import java.util.stream.Collectors;</span><br><span class="line"></span><br><span class="line">      import org.springframework.core.io.ClassPathResource;</span><br><span class="line"></span><br><span class="line">      public final class ClassPathResourceReader &#123;</span><br><span class="line">          &#x2F;**</span><br><span class="line">          * path:文件路径</span><br><span class="line">          * @since JDK 1.8</span><br><span class="line">          *&#x2F;</span><br><span class="line">          private final String path;</span><br><span class="line"></span><br><span class="line">          &#x2F;**</span><br><span class="line">          * content:文件内容</span><br><span class="line">          * @since JDK 1.6</span><br><span class="line">          *&#x2F;</span><br><span class="line">          private String content;</span><br><span class="line"></span><br><span class="line">          public ClassPathResourceReader(String path) &#123;</span><br><span class="line">              this.path &#x3D; path;</span><br><span class="line">          &#125;</span><br><span class="line"></span><br><span class="line">          public String getContent() &#123;</span><br><span class="line">              if (content &#x3D;&#x3D; null) &#123;</span><br><span class="line">                  try &#123;</span><br><span class="line">                      ClassPathResource resource &#x3D; new ClassPathResource(path);</span><br><span class="line">                      BufferedReader reader &#x3D; new BufferedReader(new InputStreamReader(resource.getInputStream()));</span><br><span class="line">                      content &#x3D; reader.lines().collect(Collectors.joining(&quot;\n&quot;));</span><br><span class="line">                      reader.close();</span><br><span class="line">                  &#125; catch (IOException ex) &#123;</span><br><span class="line">                      throw new RuntimeException(ex);</span><br><span class="line">                  &#125;</span><br><span class="line">              &#125;</span><br><span class="line">              return content;</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br></pre></td></tr></table></figure>
 <ul>
-<li><code>ctrl+alt+u</code></li>
+<li>使用方式：<ul>
+<li>```java<br>String content = new ClassPathResourceReader(“log4j.properties”).getContent();<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">## 非文本文件读取</span><br><span class="line"></span><br><span class="line">- 先拿到文件本身，在对文件进行解析</span><br><span class="line">- &#96;&#96;&#96;java</span><br><span class="line">  ClassPathResource classPathResource &#x3D; new ClassPathResource(&quot;exceltmp&#x2F;template_export.xls&quot;&quot;);</span><br><span class="line"></span><br><span class="line">  InputStream inputStream &#x3D; classPathResource.getInputStream();</span><br><span class="line">  &#x2F;&#x2F;生成目标文件</span><br><span class="line">  File somethingFile &#x3D; File.createTempFile(&quot;template_export_copy&quot;, &quot;.xls&quot;);</span><br><span class="line">  try &#123;</span><br><span class="line">      FileUtils.copyInputStreamToFile(inputStream, somethingFile);</span><br><span class="line">  &#125; finally &#123;</span><br><span class="line">      IOUtils.closeQuietly(inputStream);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></li>
 </ul>
 </li>
-<li><p>从输入目录插入图片，相对目录和绝对目录都行</p>
-<ul>
-<li><code>ctrl+alt+o</code></li>
 </ul>
 </li>
-</ul>
-<hr>
-<h1 id="访问配置"><a href="#访问配置" class="headerlink" title="访问配置"></a>访问配置</h1><p>图片的访问网址默认为<a href="https://raw.githubusercontent.com/xxx/xxxx/xxxxx" target="_blank" rel="noopener">https://raw.githubusercontent.com/xxx/xxxx/xxxxx</a></p>
-<p>如果访问失败，需要修改host文件</p>
+<li><p>结合hutool工具包的使用：</p>
 <ul>
-<li>添加<code>199.232.68.133 raw.githubusercontent.com</code></li>
-<li><img src="https://raw.githubusercontent.com/haolvh/PicGo/master/image/20200525123734.png" alt="20200525123734"></li>
+<li><pre><code class="java"><span class="keyword">import</span> cn.hutool.core.io.resource.ClassPathResource;
+
+FileInputStream fileInputStream = <span class="keyword">new</span> FileInputStream(<span class="keyword">new</span> ClassPathResource(<span class="string">"templates/视频监控类导入模板.xls"</span>).getFile());
+&lt;!--￼<span class="number">2</span>--&gt;
+</code></pre>
+</li>
+</ul>
+</li>
 </ul>
 ]]></content>
       <categories>
-        <category>IDE插件</category>
+        <category>文件读取</category>
       </categories>
       <tags>
-        <tag>vscode</tag>
+        <tag>SpringBoot</tag>
       </tags>
   </entry>
   <entry>
@@ -514,5 +506,75 @@
 
 <p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>
 ]]></content>
+  </entry>
+  <entry>
+    <title>VScode搭建GitHub稳定图床</title>
+    <url>/2020/05/25/VScode%E6%90%AD%E5%BB%BAGitHub%E7%A8%B3%E5%AE%9A%E5%9B%BE%E5%BA%8A/</url>
+    <content><![CDATA[<h1 id="VScode安装插件PicGo"><a href="#VScode安装插件PicGo" class="headerlink" title="VScode安装插件PicGo"></a>VScode安装插件PicGo</h1><p>需要用到PicGo这个插件，直接在VScode应用商店中搜索PicGo安装即可</p>
+<hr>
+<h1 id="PicGo的GitHub配置"><a href="#PicGo的GitHub配置" class="headerlink" title="PicGo的GitHub配置"></a>PicGo的GitHub配置</h1><h2 id="VScode中PicGo配置"><a href="#VScode中PicGo配置" class="headerlink" title="VScode中PicGo配置"></a>VScode中PicGo配置</h2><ul>
+<li><p>打开文件-&gt;首选项-&gt;设置-&gt;扩展-&gt;PicGo，找到找到extensions中的Picgo的设置</p>
+<ul>
+<li><img src="https://raw.githubusercontent.com/haolvh/PicGo/master/image/20200525121434.png" alt="20200525121434"></li>
+</ul>
+</li>
+<li><p>往下找到GitHub，进行配置</p>
+<ul>
+<li><p><img src="https://raw.githubusercontent.com/haolvh/PicGo/master/image/20200525121705.png" alt="20200525121705"></p>
+</li>
+<li><p>首先是PicGO-Core设为<code>github</code></p>
+</li>
+<li><p>Branch自己用Git命令查看分支，一般设为<code>master</code></p>
+</li>
+<li><p>Path要和Repo搭配使用，到时候上传的图片就会到Repo+Path目录下</p>
+</li>
+<li><p>最后一步token配置</p>
+<ul>
+<li>在GitHub上生成token</li>
+<li>首先从头像那打开设置</li>
+<li><img src="https://raw.githubusercontent.com/haolvh/PicGo/master/image/20200525122457.png" alt="20200525122457"></li>
+<li>找到最下面的Developer Settings:</li>
+<li><img src="https://raw.githubusercontent.com/haolvh/PicGo/master/image/20200525122612.png" alt="20200525122612"></li>
+<li>从Personal Access里生成一个token，可以备份下次使用</li>
+<li><img src="https://raw.githubusercontent.com/haolvh/PicGo/master/image/20200525122654.png" alt="20200525122654"></li>
+<li>最后把token复制到PicGo设置里的Github Token里就可以在vscode里使用图床了</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="图床命令"><a href="#图床命令" class="headerlink" title="图床命令"></a>图床命令</h1><p>三个基本命令：</p>
+<ul>
+<li><p>从文件目录手动插入图片</p>
+<ul>
+<li><code>ctrl+alt+e</code></li>
+</ul>
+</li>
+<li><p>从剪贴板插入图片</p>
+<ul>
+<li><code>ctrl+alt+u</code></li>
+</ul>
+</li>
+<li><p>从输入目录插入图片，相对目录和绝对目录都行</p>
+<ul>
+<li><code>ctrl+alt+o</code></li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="访问配置"><a href="#访问配置" class="headerlink" title="访问配置"></a>访问配置</h1><p>图片的访问网址默认为<a href="https://raw.githubusercontent.com/xxx/xxxx/xxxxx" target="_blank" rel="noopener">https://raw.githubusercontent.com/xxx/xxxx/xxxxx</a></p>
+<p>如果访问失败，需要修改host文件</p>
+<ul>
+<li>添加<code>199.232.68.133 raw.githubusercontent.com</code></li>
+<li><img src="https://raw.githubusercontent.com/haolvh/PicGo/master/image/20200525123734.png" alt="20200525123734"></li>
+</ul>
+]]></content>
+      <categories>
+        <category>IDE插件</category>
+      </categories>
+      <tags>
+        <tag>vscode</tag>
+      </tags>
   </entry>
 </search>
