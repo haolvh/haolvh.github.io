@@ -1,68 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>SpringBoot项目打成jar包读取resource下文件</title>
-    <url>/2020/09/02/SpringBoot%E9%A1%B9%E7%9B%AE%E6%89%93%E6%88%90jar%E5%8C%85%E8%AF%BB%E5%8F%96resource%E4%B8%8B%E6%96%87%E4%BB%B6/</url>
-    <content><![CDATA[<h1 id="普通模式下resource下文件的读取"><a href="#普通模式下resource下文件的读取" class="headerlink" title="普通模式下resource下文件的读取"></a>普通模式下resource下文件的读取</h1><ul>
-<li>采用<code>@Value</code>注解读取</li>
-<li><code>File file = ResourceUtils.getFile(&quot;classpath:exceltmp/template_export.xls&quot;);</code></li>
-</ul>
-<hr>
-<h1 id="SpringBoot项目使用mvn-package打成jar包resource下文件读取"><a href="#SpringBoot项目使用mvn-package打成jar包resource下文件读取" class="headerlink" title="SpringBoot项目使用mvn package打成jar包resource下文件读取"></a>SpringBoot项目使用mvn package打成jar包resource下文件读取</h1><ul>
-<li>按照普通模式下resource文件的读取方式，jar会报错：<ul>
-<li><code>java.io.FileNotFoundException: class path resource [exceltmp/template_export.xls] cannot be resolved to absolute file path because it does not reside in the file system:jar:file:/Users/apple/project-code/xdod-project/xdod-backend/target/xdod-backend.jar!/BOOT-INF/classes!/exceltmp/template_export.xls</code></li>
-</ul>
-</li>
-<li>报错原因：<ul>
-<li>Resource下的文件是存在于jar这个文件里面，在磁盘上是没有真实路径存在的，它其实是位于jar内部的一个路径。所以通过ResourceUtils.getFile或者this.getClass().getResource(“”)方法无法正确获取文件</li>
-</ul>
-</li>
-</ul>
-<hr>
-<h1 id="jar包正确的resource下文件读取方式"><a href="#jar包正确的resource下文件读取方式" class="headerlink" title="jar包正确的resource下文件读取方式"></a>jar包正确的resource下文件读取方式</h1><h2 id="文本文件读取"><a href="#文本文件读取" class="headerlink" title="文本文件读取"></a>文本文件读取</h2><ul>
-<li><p>采用流的方式来读取文件，对文件流进行相关的操作</p>
-</li>
-<li><p>SpringBoot使用<code>ClassPathResource</code>来读取文件流，将文件读取成字符串在进行二次操作</p>
-</li>
-<li><p>适用于：</p>
-<ul>
-<li>配置文件：<code>properties</code></li>
-<li>文本文件: <code>txt</code></li>
-<li>其他文件：<code>csv</code>,<code>SOL</code>,<code>json</code>等</li>
-</ul>
-</li>
-<li><p>```java<br>String data = “”;<br>ClassPathResource cpr = new ClassPathResource(“static/file.txt”);<br>try {</p>
-<pre><code>byte[] bdata = FileCopyUtils.copyToByteArray(cpr.getInputStream());
-data = new String(bdata, StandardCharsets.UTF_8);</code></pre><p>  } catch (IOException e) {</p>
-<pre><code>LOG.warn(&quot;IOException&quot;, e);</code></pre><p>}</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">- 工具类：</span><br><span class="line">  - &#96;&#96;&#96;java</span><br><span class="line">      import java.io.BufferedReader;</span><br><span class="line">      import java.io.IOException;</span><br><span class="line">      import java.io.InputStreamReader;</span><br><span class="line">      import java.util.stream.Collectors;</span><br><span class="line"></span><br><span class="line">      import org.springframework.core.io.ClassPathResource;</span><br><span class="line"></span><br><span class="line">      public final class ClassPathResourceReader &#123;</span><br><span class="line">          &#x2F;**</span><br><span class="line">          * path:文件路径</span><br><span class="line">          * @since JDK 1.8</span><br><span class="line">          *&#x2F;</span><br><span class="line">          private final String path;</span><br><span class="line"></span><br><span class="line">          &#x2F;**</span><br><span class="line">          * content:文件内容</span><br><span class="line">          * @since JDK 1.6</span><br><span class="line">          *&#x2F;</span><br><span class="line">          private String content;</span><br><span class="line"></span><br><span class="line">          public ClassPathResourceReader(String path) &#123;</span><br><span class="line">              this.path &#x3D; path;</span><br><span class="line">          &#125;</span><br><span class="line"></span><br><span class="line">          public String getContent() &#123;</span><br><span class="line">              if (content &#x3D;&#x3D; null) &#123;</span><br><span class="line">                  try &#123;</span><br><span class="line">                      ClassPathResource resource &#x3D; new ClassPathResource(path);</span><br><span class="line">                      BufferedReader reader &#x3D; new BufferedReader(new InputStreamReader(resource.getInputStream()));</span><br><span class="line">                      content &#x3D; reader.lines().collect(Collectors.joining(&quot;\n&quot;));</span><br><span class="line">                      reader.close();</span><br><span class="line">                  &#125; catch (IOException ex) &#123;</span><br><span class="line">                      throw new RuntimeException(ex);</span><br><span class="line">                  &#125;</span><br><span class="line">              &#125;</span><br><span class="line">              return content;</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>使用方式：<ul>
-<li>```java<br>String content = new ClassPathResourceReader(“log4j.properties”).getContent();<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">## 非文本文件读取</span><br><span class="line"></span><br><span class="line">- 先拿到文件本身，在对文件进行解析</span><br><span class="line">- &#96;&#96;&#96;java</span><br><span class="line">  ClassPathResource classPathResource &#x3D; new ClassPathResource(&quot;exceltmp&#x2F;template_export.xls&quot;&quot;);</span><br><span class="line"></span><br><span class="line">  InputStream inputStream &#x3D; classPathResource.getInputStream();</span><br><span class="line">  &#x2F;&#x2F;生成目标文件</span><br><span class="line">  File somethingFile &#x3D; File.createTempFile(&quot;template_export_copy&quot;, &quot;.xls&quot;);</span><br><span class="line">  try &#123;</span><br><span class="line">      FileUtils.copyInputStreamToFile(inputStream, somethingFile);</span><br><span class="line">  &#125; finally &#123;</span><br><span class="line">      IOUtils.closeQuietly(inputStream);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p>结合hutool工具包的使用：</p>
-<ul>
-<li><pre><code class="java"><span class="keyword">import</span> cn.hutool.core.io.resource.ClassPathResource;
-
-FileInputStream fileInputStream = <span class="keyword">new</span> FileInputStream(<span class="keyword">new</span> ClassPathResource(<span class="string">"templates/视频监控类导入模板.xls"</span>).getFile());
-&lt;!--￼<span class="number">2</span>--&gt;
-</code></pre>
-</li>
-</ul>
-</li>
-</ul>
-]]></content>
-      <categories>
-        <category>文件读取</category>
-      </categories>
-      <tags>
-        <tag>SpringBoot</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Git学习</title>
     <url>/2020/05/21/Git%E5%AD%A6%E4%B9%A0/</url>
     <content><![CDATA[<h1 id="Git版本控制方式"><a href="#Git版本控制方式" class="headerlink" title="Git版本控制方式"></a>Git版本控制方式</h1><ul>
@@ -487,6 +425,70 @@ FileInputStream fileInputStream = <span class="keyword">new</span> FileInputStre
       <tags>
         <tag>Git</tag>
         <tag>Github</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>SpringBoot项目打成jar包读取resource下文件</title>
+    <url>/2020/09/02/SpringBoot%E9%A1%B9%E7%9B%AE%E6%89%93%E6%88%90jar%E5%8C%85%E8%AF%BB%E5%8F%96resource%E4%B8%8B%E6%96%87%E4%BB%B6/</url>
+    <content><![CDATA[<h1 id="普通模式下resource下文件的读取"><a href="#普通模式下resource下文件的读取" class="headerlink" title="普通模式下resource下文件的读取"></a>普通模式下resource下文件的读取</h1><ul>
+<li><p>采用<code>@Value</code>注解读取</p>
+</li>
+<li><p>```java<br>  File file = ResourceUtils.getFile(“classpath:exceltmp/template_export.xls”);</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line"># SpringBoot项目使用mvn package打成jar包resource下文件读取</span><br><span class="line"></span><br><span class="line">-  按照普通模式下resource文件的读取方式，jar会报错：</span><br><span class="line">   -  java.io.FileNotFoundException: class path resource [exceltmp&#x2F;template_export.xls] cannot be resolved to absolute file path because it does not reside in the file system:jar:file:&#x2F;Users&#x2F;apple&#x2F;project-code&#x2F;xdod-project&#x2F;xdod-backend&#x2F;target&#x2F;xdod-backend.jar!&#x2F;BOOT-INF&#x2F;classes!&#x2F;exceltmp&#x2F;template_export.xls</span><br><span class="line">- 报错原因：</span><br><span class="line">  - Resource下的文件是存在于jar这个文件里面，在磁盘上是没有真实路径存在的，它其实是位于jar内部的一个路径。所以通过ResourceUtils.getFile或者this.getClass().getResource(&quot;&quot;)方法无法正确获取文件</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line"># jar包正确的resource下文件读取方式</span><br><span class="line"></span><br><span class="line">## 文本文件读取</span><br><span class="line"></span><br><span class="line">- 采用流的方式来读取文件，对文件流进行相关的操作</span><br><span class="line">- SpringBoot使用&#96;ClassPathResource&#96;来读取文件流，将文件读取成字符串在进行二次操作</span><br><span class="line">- 适用于：</span><br><span class="line">  - 配置文件：&#96;properties&#96;</span><br><span class="line">  - 文本文件: &#96;txt&#96;</span><br><span class="line">  - 其他文件：&#96;csv&#96;,&#96;SOL&#96;,&#96;json&#96;等</span><br><span class="line">- &#96;&#96;&#96;java</span><br><span class="line">    String data &#x3D; &quot;&quot;;</span><br><span class="line">    ClassPathResource cpr &#x3D; new ClassPathResource(&quot;static&#x2F;file.txt&quot;);</span><br><span class="line">    try &#123;</span><br><span class="line">        byte[] bdata &#x3D; FileCopyUtils.copyToByteArray(cpr.getInputStream());</span><br><span class="line">        data &#x3D; new String(bdata, StandardCharsets.UTF_8);</span><br><span class="line">      &#125; catch (IOException e) &#123;</span><br><span class="line">        LOG.warn(&quot;IOException&quot;, e);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>工具类：</p>
+<ul>
+<li><p>```java<br>  import java.io.BufferedReader;<br>  import java.io.IOException;<br>  import java.io.InputStreamReader;<br>  import java.util.stream.Collectors;</p>
+<p>  import org.springframework.core.io.ClassPathResource;</p>
+<p>  public final class ClassPathResourceReader {</p>
+<pre><code>/**
+* path:文件路径
+* @since JDK 1.8
+*/
+private final String path;
+
+/**
+* content:文件内容
+* @since JDK 1.6
+*/
+private String content;
+
+public ClassPathResourceReader(String path) {
+    this.path = path;
+}
+
+public String getContent() {
+    if (content == null) {
+        try {
+            ClassPathResource resource = new ClassPathResource(path);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(resource.getInputStream()));
+            content = reader.lines().collect(Collectors.joining(&quot;\n&quot;));
+            reader.close();
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+    return content;
+}</code></pre><p>  }</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">  - 使用方式：</span><br><span class="line">    - &#96;&#96;&#96;java</span><br><span class="line">        String content &#x3D; new ClassPathResourceReader(&quot;log4j.properties&quot;).getContent();</span><br><span class="line">      &#96;&#96;&#96;   </span><br><span class="line"></span><br><span class="line">## 非文本文件读取</span><br><span class="line"></span><br><span class="line">- 先拿到文件本身，在对文件进行解析</span><br><span class="line">- &#96;&#96;&#96;java</span><br><span class="line">    ClassPathResource classPathResource &#x3D; new ClassPathResource(&quot;exceltmp&#x2F;template_export.xls&quot;&quot;);</span><br><span class="line"></span><br><span class="line">    InputStream inputStream &#x3D; classPathResource.getInputStream();</span><br><span class="line">    &#x2F;&#x2F;生成目标文件</span><br><span class="line">    File somethingFile &#x3D; File.createTempFile(&quot;template_export_copy&quot;, &quot;.xls&quot;);</span><br><span class="line">    try &#123;</span><br><span class="line">        FileUtils.copyInputStreamToFile(inputStream, somethingFile);</span><br><span class="line">    &#125; finally &#123;</span><br><span class="line">        IOUtils.closeQuietly(inputStream);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>结合hutool工具包的使用：</p>
+<ul>
+<li><pre><code class="java">  <span class="keyword">import</span> cn.hutool.core.io.resource.ClassPathResource;
+
+  FileInputStream fileInputStream = <span class="keyword">new</span> FileInputStream(<span class="keyword">new</span> ClassPathResource(<span class="string">"templates/视频监控类导入模板.xls"</span>).getFile());
+&lt;!--￼<span class="number">2</span>--&gt;
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>文件读取</category>
+      </categories>
+      <tags>
+        <tag>SpringBoot</tag>
       </tags>
   </entry>
   <entry>
